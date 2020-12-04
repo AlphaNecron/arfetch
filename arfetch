@@ -1,0 +1,29 @@
+#/usr/bin/env bash
+# Variables
+hostname=$(cat /etc/hostname)
+header="${USER}@$hostname"
+distro=$(lsb_release -d -s | sed 's/NAME=//' | tr -d '"')
+kernel=$(uname -r)
+shell=$(basename $SHELL)
+wm=$(wmctrl -m | head -1 | awk '{print $2}')
+packages=$(pacman -Qq | wc -l)
+cpu=$(lscpu | grep "Model name" | awk '{print $5}')
+# Colors
+bold="$(tput bold)"
+blue="$(tput setaf 4)"
+magenta="$(tput setaf 5)"
+cyan="$(tput setaf 6)"
+white="$(tput setaf 7)"
+reset="$(tput sgr0)"
+
+cat << EOS
+${bold}${cyan}			 ${header}
+${bold}${cyan}       /\\		${bold}${white} ------------------	
+${bold}${cyan}      /  \\		${bold}${blue} distro		${reset}${distro}
+${bold}${purp}     /\   \\		${bold}${blue} kernel		${reset}${kernel}
+${bold}${purp}    /      \\		${bold}${blue} shell		${reset}${shell}
+${bold}${blue}   /   __   \\		${bold}${blue} wm		${reset}${wm}
+${bold}${blue}  /   |  |  -\\		${bold}${blue} packages 	${reset}${packages}
+${bold}${blue} /_-''    ''-_\\		${bold}${blue} cpu		${reset}${cpu}
+${reset}
+EOS
